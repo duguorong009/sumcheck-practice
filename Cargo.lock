@@ -320,7 +320,9 @@ name = "sumcheck-practice"
 version = "0.1.0"
 dependencies = [
  "ark-bls12-381",
+ "ark-ff",
  "ark-poly",
+ "ark-std",
 ]
 
 [[package]]
