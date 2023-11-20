@@ -3,6 +3,7 @@ use ark_poly::univariate::SparsePolynomial as UniSparsePolynomial;
 use ark_poly::polynomial::{DenseMVPolynomial, Polynomial};
 use ark_std::cfg_into_iter;
 use ark_ff::Field;
+use rand::Rng;
 
 fn main() {
     println!("Hello, world!");
@@ -93,6 +94,25 @@ pub fn n_to_vec(i: usize, n: usize) -> Vec<ScalarField> {
 		.collect()
 }
 
+// Verifier procedures
+pub fn get_r() -> Option<ScalarField> {
+    let mut rng = rand::thread_rng();
+    let r: ScalarField = rng.gen();
+    Some(r)
+}
+
+// A degree lookup table for all variables in g
+pub fn max_degree(g: &MultiPoly) -> Vec<usize> {
+    let mut lookup: Vec<usize> = vec![0; g.num_vars()];
+    cfg_into_iter!(g.terms()).for_each(|(_, term)| {
+		cfg_into_iter!(term).for_each(|(var, power)| {
+			if *power > lookup[*var] {
+				lookup[*var] = *power
+			}
+		});
+	});
+    lookup
+}
 
 struct Verifier;
 
