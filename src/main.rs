@@ -114,10 +114,12 @@ pub fn max_degree(g: &MultiPoly) -> Vec<usize> {
     lookup
 }
 
-struct Verifier;
+pub fn verify(g: &MultiPoly, c_1: ScalarField) -> bool {
+    todo!()
+}
 
-impl Verifier {
-    pub fn verify(g: &MultiPoly, c_1: ScalarField) -> bool {
-        todo!()
-    }
+pub fn slow_verify(g: &MultiPoly, c_1: ScalarField) -> bool {
+    let p = Prover::new(g);
+    let manual_sum = p.slow_sum_g();
+    manual_sum == c_1
 }
