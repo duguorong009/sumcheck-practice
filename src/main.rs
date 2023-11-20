@@ -114,8 +114,34 @@ pub fn max_degree(g: &MultiPoly) -> Vec<usize> {
     lookup
 }
 
+// Verify prover's claim c_1
 pub fn verify(g: &MultiPoly, c_1: ScalarField) -> bool {
-    todo!()
+    // 1st round
+    let mut p = Prover::new(g);
+    let mut gi = p.gen_uni_polynomial(None);
+    let mut expected_c = gi.evaluate(&0_u32.into()) + gi.evaluate(&1u32.into());
+    assert_eq!(c_1, expected_c);
+    let lookup_degree = max_degree(&g);
+    assert!(gi.degree() <= lookup_degree[0]);
+
+    // middle rounds
+    for j in 1..p.g.num_vars() {
+        let r = get_r();
+        expected_c = gi.evaluate(&r.unwrap());
+        gi = p.gen_uni_polynomial(r);
+        let new_c = gi.evaluate(&0_u32.into()) + gi.evaluate(&1_u32.into());
+        assert_eq!(expected_c, new_c);
+        assert!(gi.degree() <= lookup_degree[j]);
+    }
+
+    // final round
+    let r = get_r();
+    expected_c = gi.evaluate(&r.unwrap());
+    p.r_vec.push(r.unwrap());
+    let new_c = p.g.evaluate(&p.r_vec);
+    assert_eq!(expected_c, new_c);
+
+    true
 }
 
 pub fn slow_verify(g: &MultiPoly, c_1: ScalarField) -> bool {
