@@ -5,12 +5,12 @@ use ark_std::cfg_into_iter;
 use ark_ff::Field;
 use rand::Rng;
 
-type ScalarField = ark_bls12_381::Fr;
-type MultiPoly = SparsePolynomial<ScalarField, SparseTerm>;
-type UniPoly = UniSparsePolynomial<ScalarField>;
+pub type ScalarField = ark_bls12_381::Fr;
+pub type MultiPoly = SparsePolynomial<ScalarField, SparseTerm>;
+pub type UniPoly = UniSparsePolynomial<ScalarField>;
 
 #[derive(Debug)]
-struct Prover {
+pub struct Prover {
     pub g: MultiPoly,
     pub r_vec: Vec<ScalarField>,
 }
